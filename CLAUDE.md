@@ -82,7 +82,7 @@ To enable these, add the following **secrets** to your GitHub repo (Settings > S
 2. **`API_SECRET_KEY`** — the shared secret between Frontend and Backend
 
 And add this **repository variable** (Settings > Secrets and variables > Actions > Variables tab > New repository variable):
-3. **`SITE_URL`** — your live Frontend URL (e.g., `https://yourdomain.com`)
+3. **`SITE_URL`** — your live Backend URL (e.g., `https://backend.yourdomain.com`) — the workflows call the Backend's `/api/write-article` route
 
 You can test the workflow by going to Actions > Daily Article Publish > Run workflow. The first run will only work after the Backend is deployed and has approved topics in the content calendar.
 
