@@ -55,6 +55,21 @@ cp -r content-corpus-examples/ content-corpus/
 ```
 Edit each file in `content-corpus/` with your brand's voice, positioning, offers, testimonials, and keywords. **This is the most important step** — it's what makes the AI write like you instead of generic slop.
 
+> **⚠️ Don't rush this step.** The content corpus is the difference between AI that writes like you and AI that writes like everyone else. A properly built corpus includes:
+>
+> - **Voice Guide** — your tone, writing style, personality, banned phrases, and influences
+> - **Tone Examples** — real samples of how you write so the AI can mirror your cadence
+> - **Content Hooks** — the angles, frameworks, and opening patterns that engage your audience
+> - **Core Positioning** — who you serve, what you stand for, how you're different
+> - **Offer Architecture** — your services, pricing structure, and transformation promise
+> - **Competitive Landscape** — what alternatives exist and why your approach is better
+> - **SEO Keyword Clusters** — the search terms and topic clusters you want to own
+> - **Case Studies & Testimonials** — proof that your methodology works
+>
+> The example files in `content-corpus-examples/` show the format. You can fill them in yourself, or use the structured brand intake process and content corpus skill available in the [BraveBrand community](https://www.skool.com/bravebrand) — which walks you through a guided interview and generates all of these files from your answers.
+>
+> **Do not skip to the next step until your content corpus is complete.** Everything the AI writes — articles, SEO metadata, CTAs — is only as good as what you put here.
+
 You also need three special entries in the `brand_context` table (add via Supabase dashboard → Table Editor → brand_context → Insert row):
 
 **CTA Links** — the links the AI will use in article CTAs:
