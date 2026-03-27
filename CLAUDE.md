@@ -53,6 +53,30 @@ cp -r content-corpus-examples/ content-corpus/
 ```
 Edit each file in `content-corpus/` with your brand's voice, positioning, offers, testimonials, and keywords. **This is the most important step** — it's what makes the AI write like you instead of generic slop.
 
+You also need three special entries in the `brand_context` table (add via Supabase dashboard → Table Editor → brand_context → Insert row):
+
+**CTA Links** — the links the AI will use in article CTAs:
+```
+category: cta
+key: links
+content: (your CTA links in HTML — one per line, with descriptions of when to use each)
+```
+
+**Author Name** — the byline on articles:
+```
+category: identity
+key: author
+content: [Your Name]
+```
+
+**Image Style** — controls the AI-generated hero images (uses DALL-E):
+```
+category: content
+key: image_style
+content: (your image style description — composition, color palette, lighting, mood, what to avoid)
+```
+If no image style is configured, the system uses a clean editorial photography default. You can describe any aesthetic — minimalist, bold, illustrated, photographic — and every generated hero image will follow it.
+
 ### Step 6: Install and Run
 ```bash
 npm install
