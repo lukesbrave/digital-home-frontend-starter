@@ -4,6 +4,25 @@ An open-source, agent-native website starter kit built for digital sovereignty. 
 
 This is the **Frontend starter** — a skeleton website with the full architecture already built. It handles SEO, AI traffic detection, personalization, email, analytics, and a blog powered by AI-generated content. Behind it sits the [Digital Home Backend](https://github.com/lukesbrave/digital-home-backend) — the operating system that manages content, leads, email, analytics, and AI agents. Both share the same Supabase database.
 
+```
+┌─────────────────────────┐     ┌─────────────────────────┐
+│     FRONTEND             │     │     BACKEND             │
+│  (Public Website)        │     │  (Operating System)     │
+│                          │     │                         │
+│  Homepage, Blog,         │     │  Content Pipeline,      │
+│  Services, Contact,      │     │  Lead Management,       │
+│  SEO, AI Detection       │     │  Email, Analytics,      │
+│                          │     │  Agent Oversight         │
+│  yourdomain.com          │     │  backend.yourdomain.com │
+└───────────┬──────────────┘     └───────────┬─────────────┘
+            └───────────┬────────────────────┘
+                        │
+              ┌─────────▼─────────┐
+              │     SUPABASE      │
+              │  (Shared Database) │
+              └───────────────────┘
+```
+
 ## What You Get
 
 **Full architecture, no design opinions:**
