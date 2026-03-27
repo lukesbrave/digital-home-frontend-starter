@@ -72,6 +72,20 @@ Then set server-side secrets via `wrangler secret put` (see Environment Variable
 ### Step 9: Set Up the Backend
 Clone and set up the [Digital Home Backend](https://github.com/lukesbrave/digital-home-backend) repo — follow its CLAUDE.md for instructions. The Backend manages your content pipeline, and both repos share the same Supabase database.
 
+### Step 10: Set Up Autonomous Publishing (GitHub Actions)
+The repo includes two GitHub Actions workflows in `.github/workflows/`:
+- **`daily-publish.yml`** — runs daily at 9:03 AM UTC, picks an approved topic from the content calendar and writes + publishes an article using Claude Code
+- **`weekly-trends.yml`** — runs every Monday at 10:07 AM UTC, scans for trending topics and adds them to the content calendar
+
+To enable these, add the following **secrets** to your GitHub repo (Settings > Secrets and variables > Actions > New repository secret):
+1. **`ANTHROPIC_API_KEY`** — your Anthropic API key (same one from Step 2 of the Backend setup)
+2. **`API_SECRET_KEY`** — the shared secret between Frontend and Backend
+
+And add this **repository variable** (Settings > Secrets and variables > Actions > Variables tab > New repository variable):
+3. **`SITE_URL`** — your live Frontend URL (e.g., `https://yourdomain.com`)
+
+You can test the workflow by going to Actions > Daily Article Publish > Run workflow. The first run will only work after the Backend is deployed and has approved topics in the content calendar.
+
 ### Need Help?
 The Digital Home is built and maintained by BraveBrand. If you want help with:
 - The brand intelligence process (content corpus, voice guide, positioning)

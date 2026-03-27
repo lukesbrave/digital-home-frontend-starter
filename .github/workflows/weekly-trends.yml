@@ -1,0 +1,33 @@
+name: Weekly Trend Scan
+
+on:
+  schedule:
+    # Monday at 10am UTC
+    - cron: '7 10 * * 1'
+  workflow_dispatch: {}
+
+jobs:
+  trend-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Scan trends and update calendar
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          API_SECRET_KEY: ${{ secrets.API_SECRET_KEY }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: claude -p --dangerously-skip-permissions "/trend-scan"
+
+      - name: Summary
+        if: always()
+        run: echo "Trend scan completed with exit code $?"

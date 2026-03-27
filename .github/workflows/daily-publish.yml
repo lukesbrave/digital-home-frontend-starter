@@ -1,0 +1,55 @@
+name: Daily Article Publish
+
+on:
+  schedule:
+    # 9am UTC daily (adjust for your timezone)
+    - cron: '3 9 * * *'
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: 'Specific topic to write about (optional)'
+        required: false
+        type: string
+      publish_mode:
+        description: 'Publishing mode'
+        required: false
+        default: 'safe'
+        type: choice
+        options:
+          - safe
+          - autonomous
+
+jobs:
+  write-article:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Write and publish article
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          API_SECRET_KEY: ${{ secrets.API_SECRET_KEY }}
+          SITE_URL: ${{ vars.SITE_URL }}
+          CONTENT_PUBLISH_MODE: ${{ github.event.inputs.publish_mode || 'safe' }}
+        run: |
+          TOPIC="${{ github.event.inputs.topic }}"
+          MODE="${{ github.event.inputs.publish_mode || 'safe' }}"
+
+          if [ -n "$TOPIC" ]; then
+            claude -p --dangerously-skip-permissions "/write-article $TOPIC"
+          else
+            claude -p --dangerously-skip-permissions "/write-article"
+          fi
+
+      - name: Summary
+        if: always()
+        run: echo "Article writing job completed with exit code $?"
