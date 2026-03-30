@@ -9,24 +9,25 @@ on:
 jobs:
   trend-scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code
-
       - name: Scan trends and update calendar
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           API_SECRET_KEY: ${{ secrets.API_SECRET_KEY }}
           SITE_URL: ${{ vars.SITE_URL }}
-        run: claude -p --dangerously-skip-permissions "/trend-scan"
+        run: |
+          TIMESTAMP="$(date +%s)"
+          BODY='{}'
+          SIGNING_INPUT="POST:/api/trend-scan:${TIMESTAMP}:${BODY}"
+          SIGNATURE="$(printf "%s" "${SIGNING_INPUT}" | openssl dgst -sha256 -hmac "${API_SECRET_KEY}" -hex | awk '{print $2}')"
+
+          curl --fail-with-body \
+            -X POST "${SITE_URL}/api/trend-scan" \
+            -H "Content-Type: application/json" \
+            -H "x-api-key: ${API_SECRET_KEY}" \
+            -H "x-timestamp: ${TIMESTAMP}" \
+            -H "x-signature: ${SIGNATURE}" \
+            -d "${BODY}"
 
       - name: Summary
         if: always()

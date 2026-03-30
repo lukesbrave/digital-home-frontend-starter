@@ -6,10 +6,6 @@ on:
     - cron: '3 9 * * *'
   workflow_dispatch:
     inputs:
-      topic:
-        description: 'Specific topic to write about (optional)'
-        required: false
-        type: string
       publish_mode:
         description: 'Publishing mode'
         required: false
@@ -22,33 +18,26 @@ on:
 jobs:
   write-article:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code
-
       - name: Write and publish article
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           API_SECRET_KEY: ${{ secrets.API_SECRET_KEY }}
           SITE_URL: ${{ vars.SITE_URL }}
-          CONTENT_PUBLISH_MODE: ${{ github.event.inputs.publish_mode || 'safe' }}
         run: |
-          TOPIC="${{ github.event.inputs.topic }}"
           MODE="${{ github.event.inputs.publish_mode || 'safe' }}"
+          TIMESTAMP="$(date +%s)"
+          BODY="{\"publish_mode\":\"${MODE}\"}"
+          SIGNING_INPUT="POST:/api/write-article:${TIMESTAMP}:${BODY}"
+          SIGNATURE="$(printf "%s" "${SIGNING_INPUT}" | openssl dgst -sha256 -hmac "${API_SECRET_KEY}" -hex | awk '{print $2}')"
 
-          if [ -n "$TOPIC" ]; then
-            claude -p --dangerously-skip-permissions "/write-article $TOPIC"
-          else
-            claude -p --dangerously-skip-permissions "/write-article"
-          fi
+          curl --fail-with-body \
+            -X POST "${SITE_URL}/api/write-article" \
+            -H "Content-Type: application/json" \
+            -H "x-api-key: ${API_SECRET_KEY}" \
+            -H "x-timestamp: ${TIMESTAMP}" \
+            -H "x-signature: ${SIGNATURE}" \
+            -d "${BODY}"
 
       - name: Summary
         if: always()

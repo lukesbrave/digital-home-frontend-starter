@@ -4,7 +4,7 @@ This is an open-source, AI-native website and content system. If someone opens t
 
 ## First Time Setup
 
-If you just cloned this repo, follow these steps in order. You need both this repo (Frontend) and the [Digital Home Backend](https://github.com/lukesbrave/digital-home-backend) repo.
+If you just cloned this repo, follow these steps in order. You need both this repo (Frontend) and the [Digital Home Backend Starter](https://github.com/lukesbrave/digital-home-backend-starter) repo.
 
 ### Step 1: Create a Supabase Project
 1. Go to [supabase.com](https://supabase.com) and create a free project
@@ -16,8 +16,8 @@ If you just cloned this repo, follow these steps in order. You need both this re
 ### Step 2: Run Database Migrations
 1. In your Supabase dashboard, go to **SQL Editor**
 2. Run each migration file from `supabase/migrations/` in order (001 through 011)
-3. Then run the Backend migration from the Backend repo:
-   - `digital-home-backend/supabase/migrations/001_backend_core.sql`
+3. Then run the Backend migration from the Backend Starter repo:
+   - `digital-home-backend-starter/supabase/migrations/001_backend_core.sql`
 4. The shared database is now ready for both repos:
    - public read access is limited to published content and active offers
    - admin and agent operations happen through protected API routes
@@ -33,7 +33,31 @@ cp .env.local.example .env.local
 ```
 Fill in your Supabase URL, anon key, service role key, and site name. See the "Environment Variables" section below for the full list.
 
-### Step 5: Set Up Your Content Corpus
+### Step 5: Choose Your Design Direction
+The fastest way to make this starter feel like yours is to generate a redesign prompt first, then hand that to Claude Code.
+
+**Recommended flow:**
+1. Open the [Prompt Builder](https://prompt-builder-pink.vercel.app)
+2. Fill in your business details and preferred vibe
+3. Copy the generated prompt
+4. Paste it into Claude Code in this repo
+5. Ask Claude to redesign the existing starter around your brand while keeping the working structure intact
+
+Use wording like:
+```text
+Use this prompt to redesign the existing Digital Home starter for my brand. Keep the site architecture, page structure, and working integrations solid, but update the visual system, layout, typography, copy direction, and page styling to match my business.
+```
+
+If you skip Prompt Builder, ask the user for:
+- business name
+- industry
+- what they do
+- target audience
+- unique value
+- primary CTA
+- preferred visual vibe
+
+### Step 6: Set Up Your Content Corpus
 ```bash
 cp -r content-corpus-examples/ content-corpus/
 ```
@@ -78,47 +102,60 @@ content: (your image style description — composition, color palette, lighting,
 ```
 If no image style is configured, the system uses a clean editorial photography default. You can describe any aesthetic — minimalist, bold, illustrated, photographic — and every generated hero image will follow it.
 
-### Step 6: Install and Run
+### Step 7: Install and Run
 ```bash
 npm install
 npm run dev
 ```
 
-### Step 7: Customize Your Pages
-This starter is infrastructure, not a finished website — the design is yours to build. Every page has placeholder content marked with `[YOUR BRAND]`, `[Your Headline]`, etc. Open each page in `src/app/` and replace the placeholders with your actual content, brand colors, fonts, and styling.
+### Step 8: Customize Your Pages
+This starter is infrastructure plus a neutral baseline, not a finished website. Claude Code should treat the current pages as a starting point, then redesign them around the user's actual brand, offer, audience, and visual direction.
 
 **[Watch the customization walkthrough →](https://youtu.be/89Fh_Ppw1A8?si=BddgY8Ny7qXMiNEc)**
 
-Claude Code can help — say "help me customize the homepage."
+Claude Code can help — say "help me redesign this starter using my Prompt Builder output."
 
-### Step 8: Deploy to Cloudflare
+### Step 9: Deploy to Cloudflare
 ```bash
 npm run build
-npx wrangler deploy
+npm run deploy
 ```
 Then set server-side secrets via `wrangler secret put` (see Environment Variables section below).
+Before deploying, update `wrangler.jsonc` so the Worker name matches your own project instead of the starter default.
 
-### Step 9: Set Up the Backend
-Clone and set up the [Digital Home Backend](https://github.com/lukesbrave/digital-home-backend) repo — follow its CLAUDE.md for instructions. The Backend manages your content pipeline, and both repos share the same Supabase database.
+### Step 10: Set Up the Backend
+Clone and set up the [Digital Home Backend Starter](https://github.com/lukesbrave/digital-home-backend-starter) repo — follow its CLAUDE.md for instructions. The Backend manages your content pipeline, and both repos share the same Supabase database.
 
-### Step 10: Set Up Autonomous Publishing (GitHub Actions)
+### Step 11: Set Up Autonomous Publishing (GitHub Actions)
 The repo includes two GitHub Actions workflows in `.github/workflows/`:
-- **`daily-publish.yml`** — runs daily at 9:03 AM UTC, picks an approved topic from the content calendar and writes + publishes an article using Claude Code
-- **`weekly-trends.yml`** — runs every Monday at 10:07 AM UTC, scans for trending topics and adds them to the content calendar
+- **`daily-publish.yml`** — runs daily at 9:03 AM UTC, calls the Backend's `/api/write-article` route to write and publish an article
+- **`weekly-trends.yml`** — runs every Monday at 10:07 AM UTC, calls the Backend's `/api/trend-scan` route to add new ideas to the content calendar
 
 To enable these, add the following **secrets** to your GitHub repo (Settings > Secrets and variables > Actions > New repository secret):
-1. **`ANTHROPIC_API_KEY`** — your Anthropic API key (same one from Step 2 of the Backend setup)
-2. **`API_SECRET_KEY`** — the shared secret between Frontend and Backend
+1. **`API_SECRET_KEY`** — the shared secret between Frontend and Backend
 
 And add this **repository variable** (Settings > Secrets and variables > Actions > Variables tab > New repository variable):
-3. **`SITE_URL`** — your live Backend URL (e.g., `https://backend.yourdomain.com`) — the workflows call the Backend's `/api/write-article` route
+2. **`SITE_URL`** — your live Backend URL (e.g., `https://backend.yourdomain.com`) — the workflows call the Backend API directly
+
+The workflows automatically sign each request with `x-timestamp` and `x-signature`, so you do not need Claude Code or hidden slash commands for automation.
 
 You can test the workflow by going to Actions > Daily Article Publish > Run workflow. The first run will only work after the Backend is deployed and has approved topics in the content calendar.
+
+### Step 12: Run the Fresh-Start Validation
+Before assuming the setup is done, verify the whole loop:
+
+1. Frontend loads locally with no missing-env crash
+2. Backend login works
+3. `https://your-backend-url.com/api/test-frontend` returns `status: 200`
+4. `weekly-trends.yml` adds entries into `content_calendar`
+5. After approving one idea, `daily-publish.yml` creates a draft or published article
+
+If all five checks pass, the shared database, backend connection, and publishing automations are working correctly.
 
 ### Need Help?
 The Digital Home is built and maintained by BraveBrand. If you want help with:
 - The brand intelligence process (content corpus, voice guide, positioning)
-- The AI writing skills and content strategy workflow
+- The deeper content strategy workflow
 - Design guidance and implementation support
 - A community of founders building their own Digital Homes
 
@@ -129,7 +166,7 @@ Join the [BraveBrand community on Skool](https://www.skool.com/bravebrand/about)
 ## Project Overview
 This is a Next.js 15 website starter deployed on Cloudflare Workers with Supabase as the data layer. The site is designed to speak to three audiences simultaneously: human visitors (personalized UX), AI agents (REST API), and search engines/LLMs (structured data + llms.txt).
 
-**This is the Frontend** — the client-facing public website. Behind it sits the **Digital Home Backend** (separate repo), which is the backend operating system — content pipeline, lead management, email sequences, analytics, and agent oversight. Both share the same Supabase database.
+**This is the Frontend** — the client-facing public website. Behind it sits the **Digital Home Backend Starter** (separate repo), which is the backend operating system — content pipeline, lead management, email sequences, analytics, and agent oversight. Both share the same Supabase database.
 
 ## Tech Stack
 - **Framework:** Next.js 15 (App Router, TypeScript, RSC by default)
@@ -243,6 +280,12 @@ Server-side secrets must be set using `wrangler secret put`. The Cloudflare dash
 - **Colors:** Edit CSS variables in `src/app/globals.css` (the `:root` block)
 - **Fonts:** Replace the Google Fonts imports in `src/app/layout.tsx` or add your own @font-face
 - **Logo:** Replace `[YOUR BRAND]` text in NavBar.tsx with an `<img>` tag pointing to your logo in `/public/`
+
+### Recommended Claude handoff
+If the user wants a faster starting point, direct them to the Prompt Builder first:
+- Prompt Builder: `https://prompt-builder-pink.vercel.app`
+- Then have them paste the generated prompt into Claude Code in this repo
+- Goal: redesign the current starter, not rebuild the architecture from scratch unless there is a good reason
 
 ### Content that auto-populates from the database
 - Blog articles (written by the Backend's AI content pipeline)
