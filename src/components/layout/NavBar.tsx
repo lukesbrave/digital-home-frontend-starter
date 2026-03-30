@@ -25,16 +25,19 @@ export default function NavBar() {
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 px-6 transition-all duration-300 ${
-        scrolled ? 'bg-black/85 backdrop-blur-md' : ''
+        scrolled ? 'bg-black/85 backdrop-blur-md border-b border-white/10' : ''
       }`}
     >
       <div className="max-w-[1400px] mx-auto flex items-center justify-between h-[72px]">
-        {/* Brand — replace with your logo */}
-        <Link href="/" className="text-white font-bold text-lg tracking-tight">
-          [YOUR BRAND]
+        <Link href="/" className="flex items-center gap-3 text-white">
+          <span className="font-mono text-[0.6rem] uppercase tracking-[0.28em] text-white/45">
+            Starter Template
+          </span>
+          <span className="font-semibold text-lg tracking-tight">
+            Digital Home
+          </span>
         </Link>
 
-        {/* Links */}
         <div className="hidden md:flex items-center gap-8">
           {NAV_LINKS.map((link) => (
             <Link
@@ -53,7 +56,7 @@ export default function NavBar() {
             href="/contact"
             className="text-[0.65rem] font-semibold uppercase tracking-wider bg-white text-black px-6 py-2.5 hover:bg-transparent hover:text-white border border-white transition-all"
           >
-            Get In Touch
+            Start Here
           </Link>
         </div>
       </div>

@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: '[YOUR BRAND] — Digital Home',
+  title: 'Digital Home Starter',
   description:
-    'The first website built for humans, AI agents, and search engines.',
+    'A polished open-source starter for an owned website, blog, and AI-ready content system.',
 };
 
 export default function RootLayout({
