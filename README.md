@@ -56,15 +56,15 @@ Using a separate chat for each repo helps Claude stay in the correct project con
 
 1. **Clone both starters**
    ```bash
-   git clone https://github.com/lukesbrave/digital-home-fontend-starter.git
+   git clone https://github.com/lukesbrave/digital-home-frontend-starter.git
    git clone https://github.com/lukesbrave/digital-home-backend-starter.git
    ```
 
-2. **Set up Supabase** — create one project at [supabase.com](https://supabase.com), run the Frontend migrations in `digital-home-fontend-starter/supabase/migrations/` (`001` through `011`), then run the Backend migration in `digital-home-backend-starter/supabase/migrations/001_backend_core.sql`
+2. **Set up Supabase** — create one project at [supabase.com](https://supabase.com), run the Frontend migrations in `digital-home-frontend-starter/supabase/migrations/` (`001` through `011`), then run the Backend migration in `digital-home-backend-starter/supabase/migrations/001_backend_core.sql`
 
 3. **Set up the Frontend environment**
    ```bash
-   cd digital-home-fontend-starter
+   cd digital-home-frontend-starter
    cp .env.local.example .env.local
    npm install
    ```

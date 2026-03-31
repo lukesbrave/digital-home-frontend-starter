@@ -186,7 +186,7 @@ This is a Next.js 15 website starter deployed on Cloudflare Workers with Supabas
 
 ## Project Structure
 ```
-/digital-home-fontend-starter/
+/digital-home-frontend-starter/
   CLAUDE.md              <- You are here
   /content-corpus-examples  <- Template brand files (copy to content-corpus/)
   /supabase/migrations      <- Database schema (run in order)
