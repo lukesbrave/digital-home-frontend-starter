@@ -1,9 +1,11 @@
 name: Daily Article Publish
 
 on:
-  schedule:
-    # 9am UTC daily (adjust for your timezone)
-    - cron: '3 9 * * *'
+  # Uncomment the schedule below after your Frontend + Backend are fully set up,
+  # deployed, and your GitHub Actions secrets/variables are configured.
+  # schedule:
+  #   # 9am UTC daily (adjust for your timezone)
+  #   - cron: '3 9 * * *'
   workflow_dispatch:
     inputs:
       publish_mode:

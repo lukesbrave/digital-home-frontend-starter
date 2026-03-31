@@ -136,8 +136,8 @@ Clone and set up the [Digital Home Backend Starter](https://github.com/lukesbrav
 
 ### Step 11: Set Up Autonomous Publishing (GitHub Actions)
 The repo includes two GitHub Actions workflows in `.github/workflows/`:
-- **`daily-publish.yml`** — runs daily at 9:03 AM UTC, calls the Backend's `/api/write-article` route to write and publish an article
-- **`weekly-trends.yml`** — runs every Monday at 10:07 AM UTC, calls the Backend's `/api/trend-scan` route to add new ideas to the content calendar
+- **`daily-publish.yml`** — ships as manual-first and calls the Backend's `/api/write-article` route to write and publish an article
+- **`weekly-trends.yml`** — ships as manual-first and calls the Backend's `/api/trend-scan` route to add new ideas to the content calendar
 
 To enable these, add the following **secrets** to your GitHub repo (Settings > Secrets and variables > Actions > New repository secret):
 1. **`API_SECRET_KEY`** — the shared secret between Frontend and Backend
@@ -148,6 +148,8 @@ And add this **repository variable** (Settings > Secrets and variables > Actions
 The workflows automatically sign each request with `x-timestamp` and `x-signature`, so you do not need Claude Code or hidden slash commands for automation.
 
 You can test the workflow by going to Actions > Daily Article Publish > Run workflow. The first run will only work after the Backend is deployed and has approved topics in the content calendar.
+
+Once both repos are deployed and your Actions secrets/variables are configured, you can uncomment the `schedule:` block in the workflow files to make them run automatically.
 
 ### Step 12: Run the Fresh-Start Validation
 Before assuming the setup is done, verify the whole loop:
