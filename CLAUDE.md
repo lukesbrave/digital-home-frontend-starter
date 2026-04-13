@@ -131,7 +131,7 @@ Claude Code can help — say "help me redesign this starter using my Prompt Buil
 The user should have already:
 1. Pushed this repo to their own GitHub
 2. Connected the GitHub repo to Cloudflare (Workers & Pages > Create > Connect to Git)
-3. Set the build command to `npm run build && npx opennextjs-cloudflare build` and deploy command to `npx wrangler deploy`
+3. Used the default build command (`npm run build`) and deploy command (`npx wrangler deploy`)
 4. Completed the first build (it will deploy but the site won't work yet — that's expected)
 
 Ask the user for their **Cloudflare Worker URL** (shown in the Cloudflare dashboard after the first deploy, e.g., `https://digital-home-frontend.username.workers.dev`) and their **Worker project name** (whatever they named it in Cloudflare).
