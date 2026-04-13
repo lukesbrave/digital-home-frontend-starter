@@ -127,12 +127,32 @@ This starter is infrastructure plus a neutral baseline, not a finished website. 
 Claude Code can help — say "help me redesign this starter using my Prompt Builder output."
 
 ### Step 9: Deploy to Cloudflare
-```bash
-npm run build
-npm run deploy
-```
-Then set server-side secrets via `wrangler secret put` (see Environment Variables section below).
-Before deploying, update `wrangler.jsonc` so the Worker name matches your own project instead of the starter default.
+
+The user should have already:
+1. Pushed this repo to their own GitHub
+2. Connected the GitHub repo to Cloudflare (Workers & Pages > Create > Connect to Git)
+3. Set the build command to `npm run build && npx opennextjs-cloudflare build` and deploy command to `npx wrangler deploy`
+4. Completed the first build (it will deploy but the site won't work yet — that's expected)
+
+Ask the user for their **Cloudflare Worker URL** (shown in the Cloudflare dashboard after the first deploy, e.g., `https://digital-home-frontend.username.workers.dev`) and their **Worker project name** (whatever they named it in Cloudflare).
+
+Then do the following automatically:
+
+1. **Update `wrangler.jsonc`** — read the values from `.env.local` and update:
+   - `name` → their Cloudflare Worker project name
+   - `vars.SUPABASE_URL` → the real `NEXT_PUBLIC_SUPABASE_URL` from `.env.local`
+   - `vars.SUPABASE_ANON_KEY` → the real `NEXT_PUBLIC_SUPABASE_ANON_KEY` from `.env.local`
+
+2. **Commit and push** — this triggers a Cloudflare rebuild with real values
+
+3. **Set server-side secrets** — run these commands, reading each value from `.env.local`:
+   ```bash
+   echo "VALUE" | npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY --name WORKER_NAME
+   echo "VALUE" | npx wrangler secret put API_SECRET_KEY --name WORKER_NAME
+   ```
+   Replace VALUE with the actual values from `.env.local` and WORKER_NAME with their Worker project name.
+
+4. **Verify** — ask the user to visit their Cloudflare Worker URL and confirm the site loads.
 
 ### Step 10: Set Up the Backend
 Clone and set up the [Digital Home Backend Starter](https://github.com/lukesbrave/digital-home-backend-starter) repo — follow its CLAUDE.md for instructions. The Backend manages your content pipeline, and both repos share the same Supabase database.
