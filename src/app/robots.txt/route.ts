@@ -2,9 +2,10 @@
  * GET /robots.txt — Search engine crawler directives
  */
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+import { getSiteUrl } from "@/lib/site-url";
 
-export function GET() {
+export async function GET() {
+  const SITE_URL = await getSiteUrl();
   const body = `# Digital Home
 # ${SITE_URL}
 
