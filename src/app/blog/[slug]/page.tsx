@@ -143,7 +143,7 @@ export default async function ArticlePage({
           <article className="rounded-[2rem] border border-white/10 bg-white/[0.03] px-6 py-8 md:px-10 md:py-10">
             {article.body && (
               <div
-                className="prose prose-invert prose-lg max-w-none prose-headings:tracking-[-0.04em] prose-headings:font-semibold prose-p:text-neutral-300 prose-p:leading-8 prose-strong:text-white prose-a:text-white prose-li:text-neutral-300"
+                className="article-body prose prose-invert prose-lg max-w-none prose-headings:tracking-normal prose-headings:font-semibold prose-p:text-neutral-300 prose-p:leading-8 prose-strong:text-white prose-a:text-white prose-li:text-neutral-300"
                 dangerouslySetInnerHTML={{ __html: article.body }}
               />
             )}

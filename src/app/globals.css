@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 /* ============================================
    Digital Home Design Tokens
@@ -92,4 +93,73 @@ body {
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   padding: 0;
+}
+
+/* Article body fallback styles.
+   The blog template also uses Tailwind Typography's `prose` classes, but these
+   rules preserve readable hierarchy if the plugin is removed during branding. */
+.article-body {
+  font-size: 1.125rem;
+  line-height: 1.85;
+  color: var(--neutral-300);
+}
+
+.article-body > * + * {
+  margin-top: 1.25rem;
+}
+
+.article-body h2 {
+  margin-top: 2.75rem;
+  margin-bottom: 0.9rem;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--neutral-50);
+}
+
+.article-body h3 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  line-height: 1.18;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--neutral-100);
+}
+
+.article-body p,
+.article-body li {
+  color: var(--neutral-300);
+}
+
+.article-body strong {
+  color: var(--neutral-50);
+  font-weight: 700;
+}
+
+.article-body ul,
+.article-body ol {
+  padding-left: 1.35rem;
+}
+
+.article-body ul {
+  list-style: disc;
+}
+
+.article-body ol {
+  list-style: decimal;
+}
+
+.article-body blockquote {
+  border-left: 2px solid var(--brand-accent);
+  padding-left: 1.25rem;
+  color: var(--neutral-100);
+  font-style: italic;
+}
+
+.article-body a {
+  color: var(--neutral-50);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
