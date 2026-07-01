@@ -107,7 +107,7 @@ key: author
 content: [Your Name]
 ```
 
-**Image Style** — controls the AI-generated hero images (uses DALL-E):
+**Image Style** — controls the AI-generated hero images (uses the backend's configured OpenAI image model):
 ```
 category: content
 key: image_style
