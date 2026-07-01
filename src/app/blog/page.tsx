@@ -2,14 +2,19 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase/server';
-import StarterNotice from '@/components/layout/StarterNotice';
 
 export const dynamic = 'force-dynamic';
 
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || 'Digital Home';
+const BLOG_LABEL = process.env.NEXT_PUBLIC_BLOG_LABEL || 'Writing';
+const BLOG_TITLE = process.env.NEXT_PUBLIC_BLOG_TITLE || `Writing from ${SITE_NAME}`;
+const BLOG_DESCRIPTION =
+  process.env.NEXT_PUBLIC_BLOG_DESCRIPTION ||
+  `Essays, guides, and practical notes from ${SITE_NAME}.`;
+
 export const metadata: Metadata = {
-  title: 'Journal — Digital Home Starter',
-  description:
-    'A polished blog structure for articles, essays, and guides you can adapt to your own brand and publishing system.',
+  title: `${BLOG_LABEL} — ${SITE_NAME}`,
+  description: BLOG_DESCRIPTION,
 };
 
 function formatDate(dateStr: string) {
@@ -26,26 +31,20 @@ function estimateReadingTime(body: string | null): number {
   return Math.max(1, Math.ceil(words / 200));
 }
 
-const FEATURED_PLACEHOLDERS = [
-  {
-    label: 'Featured essay',
-    note: 'Use this space for a hero image, illustration, or branded editorial visual.',
-  },
-  {
-    label: 'Publishing system',
-    note: 'The blog is already structured so new posts can slot cleanly into the site.',
-  },
-  {
-    label: 'On-brand later',
-    note: 'Swap in your own imagery and voice once the starter becomes your site.',
-  },
-];
-
-const CARD_PLACEHOLDERS = [
-  'Add a branded article image or abstract visual.',
-  'Use a product detail, workspace shot, or custom illustration.',
-  'Keep it simple with a neutral texture or editorial graphic.',
-];
+function EditorialFallback({ compact = false }: { compact?: boolean }) {
+  return (
+    <div
+      className={`relative overflow-hidden ${
+        compact ? 'h-52' : 'h-full min-h-[320px]'
+      } bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.16),transparent_32%),linear-gradient(135deg,rgba(255,255,255,0.09),rgba(255,255,255,0.02))]`}
+      aria-hidden="true"
+    >
+      <div className="absolute inset-0 bg-[linear-gradient(120deg,transparent,rgba(255,255,255,0.08),transparent)]" />
+      <div className="absolute -left-16 top-10 h-48 w-48 rounded-full border border-white/10" />
+      <div className="absolute bottom-8 right-8 h-24 w-24 rounded-full border border-white/10" />
+    </div>
+  );
+}
 
 export default async function BlogPage() {
   let allArticles: Array<{
@@ -93,14 +92,13 @@ export default async function BlogPage() {
         <section className="min-h-screen flex items-center justify-center px-6">
           <div className="max-w-2xl rounded-[2rem] border border-white/10 bg-white/[0.03] p-10 text-center">
             <span className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-[0.78rem] font-medium text-white/60 mb-6">
-              Publishing structure
+              {BLOG_LABEL}
             </span>
             <h1 className="text-4xl md:text-5xl font-semibold tracking-[-0.06em] text-white mb-4">
-              Your journal is ready for the first post.
+              {BLOG_TITLE}
             </h1>
             <p className="text-lg text-neutral-400 leading-relaxed">
-              This starter already includes the blog layout. Connect the backend publishing flow, add your
-              first article, and this space becomes your live editorial archive.
+              {BLOG_DESCRIPTION}
             </p>
           </div>
         </section>
@@ -116,25 +114,20 @@ export default async function BlogPage() {
       <section className="pt-32 pb-14 px-6">
         <div className="max-w-[1400px] mx-auto">
           <div className="flex items-center justify-between gap-6 pb-6 mb-8 border-b border-white/10 text-[0.72rem] font-medium text-white/45">
-            <span>Publishing structure</span>
+            <span>{BLOG_LABEL}</span>
             <span>{allArticles.length} live article{allArticles.length === 1 ? '' : 's'}</span>
           </div>
 
           <div className="max-w-4xl">
             <p className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-[0.78rem] font-medium text-white/60 mb-6">
-              Journal
+              {BLOG_LABEL}
             </p>
             <h1 className="text-5xl md:text-7xl xl:text-[6.6rem] font-semibold tracking-[-0.075em] text-white leading-[0.95] mb-6">
-              A publishing layer
-              <br />
-              ready for your voice.
+              {BLOG_TITLE}
             </h1>
             <p className="text-lg md:text-2xl text-neutral-300 max-w-3xl leading-relaxed">
-              This starter ships with a clean editorial archive for articles, essays, and guides. Keep the
-              structure, then tailor the visuals, categories, and voice to match your brand.
+              {BLOG_DESCRIPTION}
             </p>
-
-            <StarterNotice compact />
           </div>
         </div>
       </section>
@@ -156,25 +149,7 @@ export default async function BlogPage() {
                   priority
                 />
               ) : (
-                <div className="grid h-full min-h-[320px] grid-cols-1 gap-px bg-white/10 p-px sm:grid-cols-3">
-                  {FEATURED_PLACEHOLDERS.map((item, index) => (
-                    <div
-                      key={item.label}
-                      className={`flex flex-col justify-between rounded-[1.5rem] px-6 py-6 ${
-                        index === 0 ? 'bg-[linear-gradient(180deg,rgba(255,255,255,0.09),rgba(255,255,255,0.04))]' :
-                        index === 1 ? 'bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.025))]' :
-                        'bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.018))]'
-                      }`}
-                    >
-                      <span className="inline-flex w-fit rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[0.68rem] font-medium text-white/45">
-                        {item.label}
-                      </span>
-                      <p className="max-w-[18ch] text-sm leading-relaxed text-neutral-300">
-                        {item.note}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+                <EditorialFallback />
               )}
             </div>
 
@@ -185,9 +160,11 @@ export default async function BlogPage() {
               <h2 className="mt-5 text-3xl md:text-4xl font-semibold tracking-[-0.05em] text-white">
                 {featured.title}
               </h2>
-              <p className="mt-4 text-lg text-neutral-400 leading-relaxed">
-                {featured.excerpt || 'Open this post to see how a published article sits inside the starter’s editorial structure.'}
-              </p>
+              {featured.excerpt && (
+                <p className="mt-4 text-lg text-neutral-400 leading-relaxed">
+                  {featured.excerpt}
+                </p>
+              )}
               <div className="mt-6 flex flex-wrap gap-3 text-[0.75rem] font-medium text-white/45">
                 <span className="rounded-full border border-white/10 px-3 py-1.5">
                   {formatDate(featured.published_at)}
@@ -210,10 +187,10 @@ export default async function BlogPage() {
             <div className="flex items-end justify-between gap-6 mb-8">
               <div>
                 <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-white/45 mb-4">
-                  More from the archive
+                  More {BLOG_LABEL.toLowerCase()}
                 </p>
                 <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.05em] text-white">
-                  The rest of the journal.
+                  Latest from {SITE_NAME}.
                 </h2>
               </div>
               <span className="hidden md:inline-flex rounded-full border border-white/10 px-4 py-2 text-sm text-white/45">
@@ -222,7 +199,7 @@ export default async function BlogPage() {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {rest.map((article, index) => (
+              {rest.map((article) => (
                 <Link
                   key={article.slug}
                   href={`/blog/${article.slug}`}
@@ -237,11 +214,7 @@ export default async function BlogPage() {
                       className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                     />
                   ) : (
-                    <div className="flex h-52 items-end border-b border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.025))] p-6">
-                      <p className="max-w-[20ch] text-sm leading-relaxed text-neutral-300">
-                        {CARD_PLACEHOLDERS[index % CARD_PLACEHOLDERS.length]}
-                      </p>
-                    </div>
+                    <EditorialFallback compact />
                   )}
 
                   <div className="p-6">
@@ -257,9 +230,11 @@ export default async function BlogPage() {
                     <h3 className="mt-4 text-2xl font-semibold tracking-[-0.04em] text-white">
                       {article.title}
                     </h3>
-                    <p className="mt-3 text-sm leading-relaxed text-neutral-400">
-                      {article.excerpt || 'Use this card style for publishing ideas, essays, updates, and evergreen content.'}
-                    </p>
+                    {article.excerpt && (
+                      <p className="mt-3 text-sm leading-relaxed text-neutral-400">
+                        {article.excerpt}
+                      </p>
+                    )}
 
                     <div className="mt-5 flex flex-wrap gap-2">
                       {article.semantic_tags.slice(0, 2).map((tag) => (
