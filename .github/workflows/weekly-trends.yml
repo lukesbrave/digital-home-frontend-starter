@@ -1,8 +1,13 @@
 name: Weekly Trend Scan
 
-# NOTE: This workflow is coming soon — the /api/trend-scan endpoint is not yet
-# implemented in the backend. Uncomment the schedule below once you've built
-# the trend-scan route (see CLAUDE.md for guidance on adding new agent routes).
+# Manual-first by design. This calls the Backend Starter's implemented
+# /api/trend-scan route to add fresh ideas to content_calendar.
+# Requirements before enabling the schedule:
+# - Backend deployed and reachable at vars.SITE_URL
+# - GitHub secret API_SECRET_KEY matches the backend API_SECRET_KEY
+# - Backend ANTHROPIC_API_KEY is set
+# - brand_context is seeded
+# - Safe mode reviewed first; autonomous mode will auto-approve new ideas
 
 on:
   # schedule:

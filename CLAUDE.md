@@ -160,7 +160,7 @@ Clone and set up the [Digital Home Backend Starter](https://github.com/lukesbrav
 ### Step 11: Set Up Autonomous Publishing (GitHub Actions)
 The repo includes two GitHub Actions workflows in `.github/workflows/`:
 - **`daily-publish.yml`** — ships as manual-first and calls the Backend's `/api/write-article` route to write and publish an article
-- **`weekly-trends.yml`** — ships as manual-first and calls the Backend's `/api/trend-scan` route to add new ideas to the content calendar
+- **`weekly-trends.yml`** — ships as manual-first and calls the Backend's implemented `/api/trend-scan` route to add new ideas to the content calendar
 
 To enable these, add the following **secrets** to your GitHub repo (Settings > Secrets and variables > Actions > New repository secret):
 1. **`API_SECRET_KEY`** — the shared secret between Frontend and Backend
@@ -170,7 +170,9 @@ And add this **repository variable** (Settings > Secrets and variables > Actions
 
 The workflows automatically sign each request with `x-timestamp` and `x-signature`, so you do not need Claude Code or hidden slash commands for automation.
 
-You can test the workflow by going to Actions > Daily Article Publish > Run workflow. The first run will only work after the Backend is deployed and has approved topics in the content calendar.
+Test both workflows manually before enabling cron:
+- `Weekly Trend Scan` requires the Backend's `ANTHROPIC_API_KEY` and seeded `brand_context`; it adds calendar ideas. In safe mode, new ideas are `planned`; in autonomous mode, new ideas are `approved`.
+- `Daily Article Publish` requires approved topics in the content calendar; in safe mode it creates drafts, and in autonomous mode it publishes live articles.
 
 Once both repos are deployed and your Actions secrets/variables are configured, you can uncomment the `schedule:` block in the workflow files to make them run automatically.
 

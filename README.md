@@ -92,8 +92,8 @@ After both repos are configured, do this quick health check:
 1. Visit the Frontend locally and confirm the starter renders without missing env errors.
 2. Log into the Backend and confirm the content dashboard loads.
 3. Open the Backend test route and confirm it can reach the Frontend: `/api/test-frontend`
-4. Manually run `weekly-trends.yml` in GitHub Actions and confirm new `content_calendar` ideas appear.
-5. Approve one idea, then manually run `daily-publish.yml` and confirm a draft or published article appears in the blog.
+4. Manually run `weekly-trends.yml` in GitHub Actions and confirm new `content_calendar` ideas appear. This requires the Backend's `ANTHROPIC_API_KEY` and seeded `brand_context`.
+5. Approve one idea, then manually run `daily-publish.yml` and confirm a draft or published article appears in the blog. Enable the cron schedules only after both manual runs succeed.
 
 If those five checks pass, the shared Supabase setup, cross-repo connection, and automation loop are all working.
 
