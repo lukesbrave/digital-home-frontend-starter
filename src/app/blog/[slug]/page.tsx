@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { getOptimizedImageUrl } from '@/lib/image-loader';
 import { createAdminClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
@@ -37,11 +38,15 @@ export async function generateMetadata({
   if (!data) return { title: 'Article Not Found' };
 
   const seo = Array.isArray(data.seo_meta) ? data.seo_meta[0] : data.seo_meta;
+  const socialImage = seo?.og_image_url
+    ? getOptimizedImageUrl(seo.og_image_url, 1200, 75)
+    : undefined;
 
   return {
     title: seo?.title || data.title,
     description: seo?.description || data.excerpt || '',
-    openGraph: seo?.og_image_url ? { images: [seo.og_image_url] } : undefined,
+    openGraph: socialImage ? { images: [socialImage] } : undefined,
+    twitter: socialImage ? { images: [socialImage] } : undefined,
   };
 }
 
